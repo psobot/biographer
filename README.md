@@ -44,6 +44,7 @@ Sometimes. If (and only if) **Biographer** needs to make any changes, it'll prom
 Easy. Super easy, actually. Add a file called `my_cool_service.py` to `./lib/services/` in this repo. Make sure it contains something like the following:
 
     import requests
+    from getpass import getpass
     from lib.service import *  
     
     class MyCoolService(Service):
