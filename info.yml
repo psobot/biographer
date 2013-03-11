@@ -1,0 +1,14 @@
+# Put your personal details up here.
+name: Peter Sobot
+location: San Francisco / Toronto
+biography:
+  Musician and software engineering student @uwaterloo.
+
+# If any one service should have *different* personal details,
+# put those down here. For example, Twitter below has a different bio.
+
+Twitter:
+  biography:
+    Musician and software engineering student @uwaterloo.
+
+    http://the.wubmachine.com & http://forever.fm. Intern @inkling. Ex-@theworkinggroup, @CapcomVancouver.
