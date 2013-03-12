@@ -88,6 +88,5 @@ class Twitter(Service):
                              if f.attrs.get('id', None) == 'profile-form'][0]
         self.browser['user[%s]' % name] = value
         resp = self.browser.submit()
-        if not '200' in resp._headers.dict['status']:
-            raise RuntimeError("Update failed with a %s error!" %
-                               resp._headers.dict['status'])
+        if resp.code != 200:
+            raise RuntimeError("Update failed with a %s error!" % resp.code)
