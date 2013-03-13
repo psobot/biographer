@@ -1,4 +1,6 @@
+import os
 import yaml
+import shutil
 import logging
 import inspect
 import services
@@ -15,11 +17,14 @@ class Biographer(object):
      - runs each service against the provided data to ensure it's up to date
     """
 
-    def __init__(self, info="info.yml", acct="accounts.yml"):
+    def __init__(self, info="info/info.yml", acct="info/accounts.yml"):
+        for f in [info, acct]:
+            self.rename_example_file_if_necessary(f)
+
         log.info("Reading info from %s...", info)
         self.data = yaml.load(open(info, 'r'))
 
-        log.info("Reading account info from %s...", acct)
+        log.info("Reading accounts from %s...", acct)
         self.acct = acct
         acct_data = yaml.load(open(acct, 'r'))
         if acct_data:
@@ -37,6 +42,11 @@ class Biographer(object):
                 self.overrides[k.lower()] = v
         for k in to_delete:
             del self.data[k]
+
+    def rename_example_file_if_necessary(self, f):
+        if not os.path.exists(f) and os.path.exists(f + '.example'):
+            log.info("Creating %s from example...", f)
+            shutil.copyfile(f + '.example', f)
 
     def do_what_you_do_best(self):
         total_successes, total_failures = 0, 0

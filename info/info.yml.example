@@ -6,9 +6,10 @@ biography:
 
 # If any one service should have *different* personal details,
 # put those down here. For example, Twitter below has a different bio.
+# All settings down here will override settings above.
 
 Twitter:
   biography:
     Musician and software engineering student @uwaterloo.
-
-    http://the.wubmachine.com & http://forever.fm. Intern @inkling. Ex-@theworkinggroup, @CapcomVancouver.
+    http://the.wubmachine.com & http://forever.fm.
+    Intern @inkling, ex-@twg.
