@@ -1,2 +1,4 @@
 import logging
-logging.basicConfig(level=logging.INFO)
+from customlog import ColoredLogger
+#logging.basicConfig(level=logging.INFO)
+logging.setLoggerClass(ColoredLogger)

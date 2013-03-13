@@ -7,9 +7,9 @@ from collections import defaultdict
 log = logging.getLogger(__name__)
 
 
-class Enforcer(object):
+class Biographer(object):
     """
-    The enforcer of consistency.
+    The reader and writer of your biographies.
      - reads data from info.yml and accounts.yml
      - loads services from the services folder
      - runs each service against the provided data to ensure it's up to date
@@ -38,9 +38,10 @@ class Enforcer(object):
         for k in to_delete:
             del self.data[k]
 
-    def enforce(self):
+    def do_what_you_do_best(self):
+        total_successes, total_failures = 0, 0
         for service in self.get_services():
-            name =  service.__name__
+            name = service.__name__
             try:
                 account = self.accounts[name.lower()] or {}
             except KeyError:
@@ -57,12 +58,24 @@ class Enforcer(object):
                     message += "\t%s\n" % arg
                 message += "Please add these to %s." % self.acct
                 raise Exception(message)
+
+            successes, failures = 0, 0
             for k, v in self.data_for(service):
                 try:
-                    s.ensure(k, v)
+                    success = s.ensure(k, v)
                 except:
                     log.error("Could not ensure %s for %s!", k, name)
                     log.error(traceback.format_exc())
+                    success = False
+                successes += int(success is True)
+                failures += int(success is False)
+            log.info("Ensured %d of %d properties on %s.",
+                     successes, successes + failures, name)
+            total_successes += successes
+            total_failures += failures
+        log.info("Ensured %d of %d properties across %d services.",
+                    total_successes, total_successes + total_failures,
+                    len(list(self.get_services())))
 
     def data_for(self, service):
         name = service.__name__.lower()
@@ -79,4 +92,4 @@ class Enforcer(object):
                     break
 
 if __name__ == "__main__":
-    Enforcer().enforce()
+    Biographer().do_what_you_do_best()

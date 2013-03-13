@@ -10,7 +10,7 @@ from lib.service import Service, requires_authentication,\
 log = logging.getLogger(__name__)
 
 #   Fix annoying log output.
-logging.getLogger('requests').setLevel(logging.WARNING)
+logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARNING)
 
 
 class SoundCloud(Service):
@@ -27,7 +27,6 @@ class SoundCloud(Service):
     @cached_property
     def user(self):
         url = self.USER_ENDPOINT % (self.username, self.CLIENT_KEY)
-        print requests.get(url).json()
         return requests.get(url).json()
 
     def authenticate(self, browser):
@@ -66,7 +65,6 @@ class SoundCloud(Service):
         return self.user['city']
 
     def check_country(self):
-        print "checking country, currently %s" % self.user['country']
         return self.user['country']
 
     def check_biography(self):

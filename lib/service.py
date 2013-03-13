@@ -25,6 +25,7 @@ class Service(object):
 
     def ensure(self, key, value):
         name = self.__class__.__name__
+        log = logging.getLogger("service.%s" % name)
         check = getattr(self, "check_" + key.lower(), None)
         modify = getattr(self, "modify_" + key.lower(), None)
         if check and modify:
@@ -41,12 +42,13 @@ class Service(object):
                                        key, name)
                 else:
                     log.info("Success! Updated %s on %s.", key, name)
-            else:
-                log.info("Not modifying %s on %s.", key, name)
+            return True
         elif check and not modify:
             log.warning("Missing modifier for %s on %s.", key, name)
         elif modify and not check:
             log.warning("Missing checker for %s on %s.", key, name)
+        else:  # this property does not exist on this service
+            return None
 
 
 def cached_property(fn):
