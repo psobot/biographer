@@ -18,7 +18,7 @@
       
 and run:
 
-    python run.py
+    ./biographer
     
 ***Et voilà!*** Biographer will check and ensure that your name, location, and bio are all up to date on whatever services you use.
 
