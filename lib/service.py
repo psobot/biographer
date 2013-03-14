@@ -15,6 +15,7 @@ class Service(object):
         modify_<attribute>
     """
 
+    _NO_DOCSTRING = "No documentation provided."
     _authenticated = False
     _cache = {}
 
@@ -23,6 +24,29 @@ class Service(object):
 
     def authenticate(self, *args, **kwargs):
         raise NotImplementedError()
+
+    @classmethod
+    def documentation(cls):
+        doc = inspect.getdoc(cls)
+        base = [doc or cls._NO_DOCSTRING, "Attributes:"]
+        name = lambda: "=== %s ===" % cls.__name__
+        return name() + "\n" + "\n\t".join(base
+            + ["\t%s %s" % (name, doc or "")
+               for name, doc in cls.attributes_with_docstrings()]
+        )
+
+    @classmethod
+    def attributes(cls):
+        methods = dir(cls)
+        return sorted([x.replace('check_', '')
+                       for x in methods if x.startswith('check_')
+                       and (x.replace('check_', 'modify_') in methods)])
+
+    @classmethod
+    def attributes_with_docstrings(cls):
+        return [(x, inspect.getdoc(getattr(cls, "check_" + x))
+                 or inspect.getdoc(getattr(cls, "modify_" + x)))
+                 for x in cls.attributes()]
 
     def __match(self, check, value, takes_arguments):
         if takes_arguments:
