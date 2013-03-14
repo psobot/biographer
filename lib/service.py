@@ -1,4 +1,5 @@
 import logging
+import inspect
 import mechanize
 log = logging.getLogger(__name__)
 
@@ -23,6 +24,19 @@ class Service(object):
     def authenticate(self, *args, **kwargs):
         raise NotImplementedError()
 
+    def __match(self, check, value, takes_arguments):
+        if takes_arguments:
+            r = check(value)
+            if r in [True, False]:
+                return r
+            else:
+                raise RuntimeError(
+                    "Value returned from %s.%s not True or False" %
+                    (check.im_class.__name__, check.__name__)
+                )
+        else:
+            return check() == value
+
     def ensure(self, key, value):
         name = self.__class__.__name__
         log = logging.getLogger("service.%s" % name)
@@ -30,13 +44,13 @@ class Service(object):
         modify = getattr(self, "modify_" + key.lower(), None)
         if check and modify:
             log.info("Checking %s on %s...", key, name)
-            current = check()
-            if current != value:
-                log.info("Expected '%s', got '%s'.", value, current)
+            takes_arguments = len(inspect.getargspec(check).args[1:]) > 0
+            match = lambda: self.__match(check, value, takes_arguments)
+            if not match():
+                log.info("Did not find expected value '%s'.", value)
                 log.info("Updating %s on %s...", key, name)
                 modify(value)
-                current = check()
-                if current != value:
+                if not match():
                     raise RuntimeError("Value of %s on %s has not changed "
                                        "after modification. Please verify.",
                                        key, name)

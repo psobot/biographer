@@ -57,6 +57,12 @@ class Twitter(Service):
         return browser
 
     def check_name(self):
+        """
+        Note: All check_<param> methods can optionally take a parameter
+              that will have the value to compare against supplied.
+              If the parameter is supplied, check_<param> must return
+              a boolean value - whether the check succeeded or not.
+        """
         return self.user['name']
 
     def check_location(self):
