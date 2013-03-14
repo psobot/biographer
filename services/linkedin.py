@@ -1,3 +1,4 @@
+import re
 import time
 import logging
 import requests
@@ -60,10 +61,10 @@ class LinkedIn(Service):
     def check_headline(self):
         return self.user['headline'].strip()
 
-    # NOTE: location for LinkedIn service is currently unsupported. It requires
-    # nested yaml attributes. This will be worked on and supported soon.
-    def check_location(self):
-        return self.user['location'].strip()
+    def check_location(self, old):
+        new_region = self.user['location'].strip()
+        old_region = old['region']
+        return bool(re.match(old_region, new_region))
 
     def modify_name(self, value):
         name = value.split(' ')
