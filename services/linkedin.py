@@ -72,7 +72,7 @@ class LinkedIn(Service):
                                         [name[0], name[1]])
 
     def modify_headline(self, value):
-        self.modify_profile_attributes( ['headline'], value)
+        self.modify_profile_attributes(['headline'], [value])
 
     def modify_location(self, value):
         country = value['country']
