@@ -93,6 +93,6 @@ class LinkedIn(Service):
         if resp.code != 200:
             raise RuntimeError("Update failed with a %s error!" %
                                resp.status_code)
-        log.info("Waiting for %s value to propagate to the API...", "location")
+        log.info("Waiting for the value to propagate to the API...")
         time.sleep(60)
 
